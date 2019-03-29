@@ -25,13 +25,13 @@ app.get('/', (req, res) => {
     res.send('Hello there')
 })
 
-//CORS
-// app.use((request, response, next) => {
-    // response.header("Access-Control-Allow-Origin", "*");
-    // response.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept, Authorization");
-// 
-    // next();
-// });
+// CORS
+app.use((request, response, next) => {
+    response.header("Access-Control-Allow-Origin", "*");
+    response.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept, Authorization");
+
+    next();
+});
 
 app.options("*", (request, response, next) => {
     response.header(
