@@ -1,0 +1,29 @@
+{
+  "name": "backend-instagram-clone",
+  "version": "1.0.0",
+  "description": "backend of instagram clone ",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --verbose app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiriamGaGuMuk/backend-instagram-clone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MiriamGaGuMuk/backend-instagram-clone/issues"
+  },
+  "homepage": "https://github.com/MiriamGaGuMuk/backend-instagram-clone#readme",
+  "devDependencies": {
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.20",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.10"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2"
+  }
+}
