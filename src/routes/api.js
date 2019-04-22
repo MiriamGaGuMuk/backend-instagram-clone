@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const app = Router();
 const Users = require('../controllers/user');
+const Profile = require('../controllers/profile');
 
 
 //Users routes
@@ -11,7 +12,15 @@ app.get('/users/:userId', Users.findBy);
 // app.get('/users/:username', Users.profile)
 
 //Profile
-//app.posts
+app.route('/username')
+  .get(Profile.index)
+  .post(Profile.create)
+
+app.route('/username/:userId')
+  .get(Profile.findBy)
+  .put(Profile.updateBy)
+  .delete(Profile.deleteBy)
+
 
 //Authentication
 app.post('/auth/signup', Users.signup)
