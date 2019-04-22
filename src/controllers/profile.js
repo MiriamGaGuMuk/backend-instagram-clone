@@ -25,11 +25,12 @@ const create = (req, res) => {
         followers: req.body.followers,
         following: req.body.following,
         description: req.body.description,
-        
+
         username: req.body.username,
         name: req.body.name,
         userId: req.body.userId
     })
+
     newProfile
         .save()
         .then(data => {
@@ -58,14 +59,14 @@ const findBy = (req, res) => {
 const updateBy = ({ body, params }, res) => {
 
     Profile.findOne({ _id: params.userId })
-        .then(recipe => {
+        .then(profile => {
 
-            recipe.likes = body.likes,
-                recipe.description = body.description,
-                recipe.photo = body.photo,
+            profile.likes = body.likes,
+                profile.description = body.description,
+                profile.photo = body.photo,
 
 
-                recipe.save()
+                profile.save()
                     .then(updated => res.status(200).json({ "Profile Updated": updated }))
                     .catch(e => res.status(500).json(e))
 
@@ -79,10 +80,10 @@ const updateBy = ({ body, params }, res) => {
 
 const deleteBy = (req, res) => {
     Profile
-        .findById(req.params.userId, function (err, recipe) {
+        .findById(req.params.userId, function (err, profile) {
             if (!err) {
-                Profile.deleteMany({ recipe: { $in: [recipe._id] } }, function (err) { })
-                recipe
+                Profile.deleteMany({ profile: { $in: [profile._id] } }, function (err) { })
+                profile
                     .remove()
                     .then(() => {
                         res.status(200)
