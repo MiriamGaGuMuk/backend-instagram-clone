@@ -16,7 +16,7 @@ app.route('/username')
   .get(Profile.index)
   .post(Profile.create)
 
-app.route('/username/:userId')
+app.route('/username/:profileId')
   .get(Profile.findBy)
   .put(Profile.updateBy)
   .delete(Profile.deleteBy)

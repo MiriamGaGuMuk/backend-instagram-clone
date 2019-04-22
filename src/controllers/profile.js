@@ -1,6 +1,5 @@
 const User = require('../models/User')
 const Profile = require('../models/Profile')
-const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 
 const index = (req, res, next) => {
@@ -25,7 +24,6 @@ const create = (req, res) => {
         followers: req.body.followers,
         following: req.body.following,
         description: req.body.description,
-
         username: req.body.username,
         name: req.body.name,
         userId: req.body.userId
@@ -50,7 +48,7 @@ const create = (req, res) => {
 
 
 const findBy = (req, res) => {
-    Profile.findById(req.params.userId).exec()
+    Profile.findById(req.params.profileId).exec()
         .then(data => res.status(200).json({ type: 'Get Profile by Id', data: data }))
         .catch(e => res.status(500).json(e))
 }
@@ -58,15 +56,18 @@ const findBy = (req, res) => {
 
 const updateBy = ({ body, params }, res) => {
 
-    Profile.findOne({ _id: params.userId })
+    Profile.findOne({ _id: params.profileId })
         .then(profile => {
 
-            profile.likes = body.likes,
-                profile.description = body.description,
-                profile.photo = body.photo,
-
-
-                profile.save()
+            profile.publishing = body.publishing,
+            profile.followers = body.followers,
+            profile.following = body.following,
+            profile.description = body.description,
+            profile.photo = body.photo,
+            profile.username = body.username,
+            profile.name = body.name
+              
+            profile.save()
                     .then(updated => res.status(200).json({ "Profile Updated": updated }))
                     .catch(e => res.status(500).json(e))
 
@@ -80,7 +81,7 @@ const updateBy = ({ body, params }, res) => {
 
 const deleteBy = (req, res) => {
     Profile
-        .findById(req.params.userId, function (err, profile) {
+        .findById(req.params.profileId, function (err, profile) {
             if (!err) {
                 Profile.deleteMany({ profile: { $in: [profile._id] } }, function (err) { })
                 profile
