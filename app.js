@@ -1,76 +1,49 @@
-const express = require('express');
-const chalk = require('chalk');
-const morgan = require('morgan');
-const app = express();
-const mongoose = require('mongoose');
-require('dotenv').config()
+const express = require('express')
+const app = express()
+const chalk = require('chalk')
+const morgan = require('morgan')
+const api = require('./src/routes/api')
+const mongoose = require('mongoose')
 const PORT = process.env.PORT || 3000;
+require('dotenv').config()
 
+// Set up Mongoose and MongoDB
+const MONGODB_URL = process.env.MONGODB_URL
 
-//import api routes
-const api = require('./src/routes/api');
+mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useCreateIndex: true })
+mongoose.connection.on('connected', () => console.log('Succesful'))
 
+// Middleware
+app.use(morgan('combined'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-//middleware
-app.use(morgan('combined'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+//Test
+app.get('/', (req, res) => res.send('Server is working!'))
 
-//json format
-// app.set('json spaces', 2)
-
-
-//test
-app.get('/', (req, res) => {
-    res.send('Hello there')
-})
-
-// CORS
+//CORS
 app.use((request, response, next) => {
-    response.header("Access-Control-Allow-Origin", "*");
-    response.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept, Authorization");
+  response.header("Access-Control-Allow-Origin", "*");
+  response.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept, Authorization");
 
-    next();
+  next();
 });
 
 app.options("*", (request, response, next) => {
-    response.header(
-        "Access-Control-Allow-Methods",
-        "GET, POST, PUT, DELETE"
-    );
-    response.send(200);
+  response.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE"
+  );
+  response.send(200);
 
-    next();
+  next();
 })
 
-
 //API route
-app.use('/api/v1', api);
+app.use('/api/v1', api)
 
-//error 404
-app.use((request, response) => {
-    const ERROR = {
-        message: '404. Not Found'
-    }
-    response
-        .status(404)
-        .json(ERROR);
-});
+//Errors
+app.use((req, res) => res.status(404).json({ message: '404 Not Found' }))
+app.use((req, res) => res.status(500).json({ message: '500 Server Error' }))
 
-//error 500
-app.use((err, request, response, next) => {
-    const ERROR = {
-        message: '500. Server Error'
-    }
-    response
-        .status(500)
-        .json(ERROR);
-});
-
-//server listening
-
-app.listen(PORT, () => {
-    const msg = chalk.yellow(`Node Server is running on PORT: ${PORT}`);
-
-    console.log(msg);
-});
+app.listen(PORT, () => console.log(chalk.yellow(`Serven at port ${PORT}`)))
