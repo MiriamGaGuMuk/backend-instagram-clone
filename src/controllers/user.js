@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const data = require('../../data.json');
-const bcrypt = require('bcrypt')
-const User = require('../models/User')
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
+const passport = require('passport');
+const passportSetup = require('../config/passport-setup');
 
 const controllers = {
     index: (req, res) => {
@@ -74,38 +76,18 @@ const controllers = {
         User.findById(req.params.userId).exec()
           .then(data => res.status(200).json({ type: 'Get User by Id', data: data }))
           .catch(e => res.status(500).json(e))
-      }
+      },
       
-    // login = (req, res) => {
+    // login: (req, res) => {
     //     User.find({ email: req.body.email }).exec()
     //       .then(user => {
     //         if (user.length > 0) {
     //           //comparing passwords
       
-    //           bcrypt.compare(req.body.password, user[0].password, (error, result) => {
-    //             if (error) {
-    //               return res.status(401).json({ message: "Authnetication Failed" })
-    //             }
-    //             // if not, create token
-      
-    //             console.log(`Role is ${user[0].role}`);
-      
+    //           bcrypt.compare(req.body.password, (error, result) => {
     //             if (result) {
-    //               const token = jwt.sign({
-    //                 name: user[0].name,
-    //                 email: user[0].email
-    //               }, process.env.JWT_SECRETKEY, {
-    //                   expiresIn: "1hr"
-    //                 });
-      
-    //               return res.status(200).json({
-    //                 message: "Authentication Successful",
-    //                 token
-    //               })
-    //             }
-    //             res.status(401).json({ message: "Authnetication Failed" })
-      
-      
+    //               return res.status(200).json({ message: "Authnetication Succed" })
+    //             }     
     //           })
     //         } else {
     //           res.status(422).json({ message: "Authnetication Failed" })
@@ -113,7 +95,15 @@ const controllers = {
       
     //       })
     //   }
-      
+      signin: () => {
+        passport.authenticate('google', {
+          scope: ['profile']
+        })
+
+      }, 
+      redirect: (req, res) =>{
+        res.send('You reached the callback URI')
+      }
       
       
 
@@ -124,3 +114,5 @@ const controllers = {
 
 //exportar
 module.exports = controllers;
+
+// bcrypt.compare(req.body.password, user[0].password, (error, result) => {

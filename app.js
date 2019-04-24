@@ -1,9 +1,10 @@
-const express = require('express')
-const app = express()
-const chalk = require('chalk')
-const morgan = require('morgan')
-const api = require('./src/routes/api')
-const mongoose = require('mongoose')
+const express = require('express');
+const app = express();
+const chalk = require('chalk');
+const morgan = require('morgan');
+const api = require('./src/routes/api');
+const mongoose = require('mongoose');
+const passportSetup = require('./src/config/passport-setup');
 const PORT = process.env.PORT || 3000;
 require('dotenv').config()
 
@@ -46,4 +47,4 @@ app.use('/api/v1', api)
 app.use((req, res) => res.status(404).json({ message: '404 Not Found' }))
 app.use((req, res) => res.status(500).json({ message: '500 Server Error' }))
 
-app.listen(PORT, () => console.log(chalk.yellow(`Serven at port ${PORT}`)))
+app.listen(PORT, () => console.log(chalk.green(`Serven at port ${PORT}`)))

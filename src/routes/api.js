@@ -26,5 +26,10 @@ app.route('/username/:profileId')
 app.post('/auth/signup', Users.signup)
 // app.post('/auth/login', Users.login)
 
+//Auth Provider
+app.get('/auth/google', Users.signin);
+app.get('/auth/redirect', Users.redirect);
+// app.post('/auth/facebook', Users.signin);
+
 
 module.exports = app;
