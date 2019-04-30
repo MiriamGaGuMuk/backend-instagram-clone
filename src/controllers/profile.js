@@ -24,8 +24,6 @@ const create = (req, res) => {
         followers: req.body.followers,
         following: req.body.following,
         description: req.body.description,
-        username: req.body.username,
-        name: req.body.name,
         userId: req.body.userId
     })
 
@@ -48,7 +46,7 @@ const create = (req, res) => {
 
 
 const findBy = (req, res) => {
-    Profile.findById(req.params.profileId).exec()
+    Profile.find({userId: req.params.profileId}).exec()
         .then(data => res.status(200).json({ type: 'Get Profile by Id', data: data }))
         .catch(e => res.status(500).json(e))
 }

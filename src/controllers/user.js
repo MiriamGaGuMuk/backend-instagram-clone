@@ -1,37 +1,58 @@
 const mongoose = require('mongoose');
-const data = require('../../data.json');
+// const data = require('../../data.json');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const passport = require('passport');
 const passportSetup = require('../config/passport-setup');
+const Profile = require ('../models/Profile')
 
 const controllers = {
     index: (req, res) => {
-        console.log(req.params)
+     User
+     .find({})
+     .exec()
+     .then(users => {
         res
-            .status(200)
-            .json({
-                data: data
-            })
+        .status(200)
+        .json({
+          data: users
+        })
+      })
+     .catch(err => console.log('Error'))
     },
 
-    // find: (req, res) => {
-    //     console.log(typeof req.params.username)
+    find: (req, res) => {
+      User.find({username: req.params.username})
+        .exec()
+        .then(user => {
+          res
+          .status(200)
+          .json({
+            data: user
+          })
+        })
+        .catch(err => console.log('No user found'))
+    
+},
 
-    //     const queryUsername = req.params.username
-        
-    //     //data is the obj, users is the array and filter go trough the entire array.
-    //     const user = data.users.filter(user => {
-    //         // username is from the obj(What'm looking for)
-    //         return user.username === queryUsername
-    //     })
-    //     console.log(user)
-    //     res
-    //         .status(200)
-    //         .json({
-    //             data: user
-    //         })
-    // },
+findByProfile: (req, res) => {
+  console.log('Finding by profile')
+  
+  User
+
+  .find({username: req.params.username})
+  .select('profile')
+  .populate('profile')
+  .exec()
+  .then(user => {
+    res
+    .status(200)
+    .json({
+      data: user
+    })
+  })
+  .catch(err => console.log(err))
+},
     
     signup: (req, res) => {
         User
@@ -53,14 +74,27 @@ const controllers = {
                   password: hash
                 })
 
+                const newProfile = new Profile({
+                  _id: new mongoose.Types.ObjectId(),
+                  publishing: 0,
+                  followers: 0,
+                  following: 0,
+                  description: ''
+                })
+
                 newUser
                   .save()
-                  .then(saved => {
-                    res.status(200)
+                  .then(userCreated => {
+                    newProfile.save().then(profileCreated => {
+                      newUser.profile = newProfile._id
+                      newUser.save()
+                      res.status(200)
                       .json({
-                        message: "User created successfully",
-                        data: saved
+                        message: 'User Created',
+                        data: userCreated
                       })
+                    })
+                   
                   })
               })
             } else {
@@ -72,11 +106,11 @@ const controllers = {
           })
       },
 
-      findBy: (req, res) => {
-        User.findById(req.params.userId).exec()
-          .then(data => res.status(200).json({ type: 'Get User by Id', data: data }))
-          .catch(e => res.status(500).json(e))
-      },
+      // findBy: (req, res) => {
+      //   User.findById(req.params.userId).exec()
+      //     .then(data => res.status(200).json({ type: 'Get User by Id', data: data }))
+      //     .catch(e => res.status(500).json(e))
+      // },
       
     // login: (req, res) => {
     //     User.find({ email: req.body.email }).exec()
