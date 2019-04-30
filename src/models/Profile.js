@@ -22,9 +22,7 @@ const profileSchema = new Schema({
     //     required: true
     // },
 
-    username: { type: Schema.Types.ObjectId, ref: 'User' },
-    name: { type: Schema.Types.ObjectId, ref: 'User' },
-    userid: { type: Schema.Types.ObjectId, ref: 'User' }
+    user: { type: Schema.Types.ObjectId, ref: 'User' }
 
 
 
